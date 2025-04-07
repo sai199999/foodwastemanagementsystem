@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Donate Food - FoodSaver{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-success bg-opacity-75 text-white">
+                    <h3 class="my-2"><i class="bi bi-gift me-2"></i>Donate Food</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            <label for="food_type" class="form-label">Food Type</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-egg-fried"></i></span>
+                                {{ form.food_type(class="form-control", id="food_type", placeholder="e.g., Cooked meals, Bakery items, Packaged food") }}
+                            </div>
+                            {% if form.food_type.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.food_type.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">Specify the type of food you want to donate</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-boxes"></i></span>
+                                {{ form.quantity(class="form-control", id="quantity", placeholder="e.g., 20 meals, 5 kg rice, 10 loaves of bread") }}
+                            </div>
+                            {% if form.quantity.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.quantity.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">Provide the approximate quantity of food</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="expiry_time" class="form-label">Expiry Time</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                                {{ form.expiry_time(class="form-control", id="expiry_time", placeholder="YYYY-MM-DD HH:MM") }}
+                            </div>
+                            {% if form.expiry_time.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.expiry_time.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">Enter when the food will expire (format: YYYY-MM-DD HH:MM)</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="pickup_address" class="form-label">Pickup Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                {{ form.pickup_address(class="form-control", id="pickup_address", rows="3", placeholder="Enter complete address with landmarks") }}
+                            </div>
+                            {% if form.pickup_address.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.pickup_address.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">Provide the complete address where the food can be picked up</small>
+                        </div>
+
+                        <div class="card bg-light mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-info-circle me-2"></i>Important Information</h5>
+                                <ul class="mb-0">
+                                    <li>Make sure the food is properly packaged and safe for consumption.</li>
+                                    <li>Please be available at the pickup address during the collection time.</li>
+                                    <li>Once your donation is submitted, an admin will review and assign an agent.</li>
+                                    <li>You'll receive notifications about the status of your donation.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-success btn-lg") }}
+                            <a href="{{ url_for('donor_dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

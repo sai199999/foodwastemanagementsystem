@@ -1,0 +1,60 @@
+Below is an updated prompt that incorporates a modern interface along with the original functionalities:
+
+---
+
+### **Prompt:**
+
+> Build a **Food Waste Management System** as a **web application** using:
+> - **Backend:** Flask (Python)
+> - **Frontend:** HTML, CSS, and JavaScript with a modern UI/UX design
+> - **Storage:** Local storage (JSON/SQLite)
+> 
+> ### **Roles & Functionalities:**
+> #### **Donor:**
+> - Register and log in.
+> - Submit food donation requests (including food type, quantity, expiry time, pickup address).
+> - Receive real-time notifications when food is picked up and delivered.
+> 
+> #### **Admin:**
+> - View and manage all donation requests.
+> - Assign agents to collect food from donors.
+> - Confirm successful deliveries and notify donors.
+> 
+> #### **Agent:**
+> - View assigned food pickup tasks.
+> - Update task statuses (e.g., Collected, Delivered).
+> 
+> ### **Technical Requirements:**
+> - **Backend:** Use Flask to create RESTful API endpoints such as:
+>   - `/register` → User registration
+>   - `/login` → User authentication
+>   - `/donate` → Submit donation request
+>   - `/view_requests` → Admin views donations
+>   - `/assign_agent` → Admin assigns an agent
+>   - `/update_status` → Agent updates delivery status
+>   - `/notifications` → Donor receives alerts
+> - **Frontend:**
+>   - **HTML/CSS/JS:** Build the user interface with clean and semantic HTML, modern CSS techniques (possibly using frameworks like Bootstrap or Materialize for responsiveness), and JavaScript for dynamic interactions.
+>   - **Modern UI/UX:** Incorporate a modern interface design with:
+>     - A sleek, responsive layout that adapts to mobile and desktop screens.
+>     - Intuitive navigation and dashboard interfaces for donors, admins, and agents.
+>     - Use of animations/transitions for smoother interactions.
+>     - Clear visual hierarchies and a contemporary color scheme.
+> - **Storage:** Use JSON or SQLite for locally storing user data, donation records, and transaction histories.
+> 
+> ### **Features:**
+> - **User Authentication:** Secure login and logout for donors, admins, and agents.
+> - **Dashboard:** 
+>   - Donors can track the status of their donations in real time.
+>   - Admins can efficiently manage donations and assign tasks.
+>   - Agents can update collection and delivery statuses with ease.
+> - **Real-Time Notifications:** Utilize API calls to notify donors upon food pickup and delivery.
+> - **Modern UI/UX:** Ensure the frontend is polished, user-friendly, and responsive by leveraging contemporary design practices and frameworks.
+> - **Interactivity:** Utilize JavaScript for dynamic content updates and a smooth user experience.
+> 
+> ### **Outcome:**
+> The completed system should seamlessly connect **donors, agents, and admins**, automating the food collection and distribution process, while providing a modern, intuitive, and responsive user interface that contributes to reducing food waste.
+
+---
+
+This prompt integrates a modern interface into the project requirements, ensuring a stylish, functional, and responsive application. Let me know if you need any further adjustments or additional features!

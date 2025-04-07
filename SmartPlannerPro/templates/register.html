@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - FoodSaver{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success bg-opacity-75 text-center">
+                    <h3 class="my-2">
+                        <i class="bi bi-person-plus me-2"></i>Create an Account
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        {{ form.hidden_tag() }}
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="username" class="form-label">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    {{ form.username(class="form-control", id="username", placeholder="Choose a username") }}
+                                </div>
+                                {% if form.username.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.username.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    {{ form.email(class="form-control", id="email", placeholder="Enter your email") }}
+                                </div>
+                                {% if form.email.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.email.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                    {{ form.password(class="form-control", id="password", placeholder="Create a password") }}
+                                    <button class="btn btn-outline-secondary" type="button" 
+                                            onclick="togglePassword('password', 'password-icon')">
+                                        <i class="bi bi-eye" id="password-icon"></i>
+                                    </button>
+                                </div>
+                                {% if form.password.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.password.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirm_password" class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                                    {{ form.confirm_password(class="form-control", id="confirm_password", placeholder="Confirm your password") }}
+                                    <button class="btn btn-outline-secondary" type="button" 
+                                            onclick="togglePassword('confirm_password', 'confirm-password-icon')">
+                                        <i class="bi bi-eye" id="confirm-password-icon"></i>
+                                    </button>
+                                </div>
+                                {% if form.confirm_password.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.confirm_password.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Select Your Role</label>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="form-check card h-100 p-3 {% if form.role.data == 'donor' %}bg-success bg-opacity-10 border-success{% endif %}">
+                                        <input class="form-check-input" type="radio" name="role" id="donor" value="donor" 
+                                               {% if form.role.data == 'donor' %}checked{% endif %} 
+                                               onchange="this.closest('.card').classList.add('bg-success', 'bg-opacity-10', 'border-success'); 
+                                                         Array.from(this.closest('.row').querySelectorAll('.form-check')).forEach(el => { 
+                                                             if(el !== this.closest('.card')) 
+                                                                 el.classList.remove('bg-success', 'bg-opacity-10', 'border-success'); 
+                                                         })">
+                                        <label class="form-check-label d-block text-center" for="donor">
+                                            <i class="bi bi-gift mb-3" style="font-size: 2rem;"></i>
+                                            <h5>Food Donor</h5>
+                                            <small class="text-muted">Donate excess food to those in need</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check card h-100 p-3 {% if form.role.data == 'admin' %}bg-success bg-opacity-10 border-success{% endif %}">
+                                        <input class="form-check-input" type="radio" name="role" id="admin" value="admin" 
+                                               {% if form.role.data == 'admin' %}checked{% endif %} 
+                                               onchange="this.closest('.card').classList.add('bg-success', 'bg-opacity-10', 'border-success'); 
+                                                         Array.from(this.closest('.row').querySelectorAll('.form-check')).forEach(el => { 
+                                                             if(el !== this.closest('.card')) 
+                                                                 el.classList.remove('bg-success', 'bg-opacity-10', 'border-success'); 
+                                                         })">
+                                        <label class="form-check-label d-block text-center" for="admin">
+                                            <i class="bi bi-person-workspace mb-3" style="font-size: 2rem;"></i>
+                                            <h5>Administrator</h5>
+                                            <small class="text-muted">Manage donations and assign agents</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check card h-100 p-3 {% if form.role.data == 'agent' %}bg-success bg-opacity-10 border-success{% endif %}">
+                                        <input class="form-check-input" type="radio" name="role" id="agent" value="agent" 
+                                               {% if form.role.data == 'agent' %}checked{% endif %} 
+                                               onchange="this.closest('.card').classList.add('bg-success', 'bg-opacity-10', 'border-success'); 
+                                                         Array.from(this.closest('.row').querySelectorAll('.form-check')).forEach(el => { 
+                                                             if(el !== this.closest('.card')) 
+                                                                 el.classList.remove('bg-success', 'bg-opacity-10', 'border-success'); 
+                                                         })">
+                                        <label class="form-check-label d-block text-center" for="agent">
+                                            <i class="bi bi-truck mb-3" style="font-size: 2rem;"></i>
+                                            <h5>Collection Agent</h5>
+                                            <small class="text-muted">Collect and deliver food donations</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if form.role.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.role.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-success btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p class="mb-0">Already have an account? <a href="{{ url_for('login') }}" class="text-success">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Automatically select whole form section when selecting a role
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleCards = document.querySelectorAll('.form-check.card');
+        roleCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const radioInput = this.querySelector('input[type="radio"]');
+                radioInput.checked = true;
+                
+                // Add highlight to selected card and remove from others
+                roleCards.forEach(c => {
+                    c.classList.remove('bg-success', 'bg-opacity-10', 'border-success');
+                });
+                this.classList.add('bg-success', 'bg-opacity-10', 'border-success');
+            });
+        });
+    });
+</script>
+{% endblock %}

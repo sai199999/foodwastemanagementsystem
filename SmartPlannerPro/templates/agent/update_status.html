@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Status - FoodSaver{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header {% if donation.status == 'Assigned' %}bg-primary{% else %}bg-success{% endif %} bg-opacity-75 text-white">
+                    <h3 class="my-2">
+                        {% if donation.status == 'Assigned' %}
+                            <i class="bi bi-box me-2"></i>Mark as Collected
+                        {% else %}
+                            <i class="bi bi-check-circle me-2"></i>Mark as Delivered
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Task #{{ donation.id }} Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1"><strong>Donor:</strong></p>
+                                    <p>{{ donation.donor.username }}</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1"><strong>Food Type:</strong></p>
+                                    <p>{{ donation.food_type }}</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1"><strong>Quantity:</strong></p>
+                                    <p>{{ donation.quantity }}</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1"><strong>Expiry Time:</strong></p>
+                                    <p class="format-datetime">{{ donation.expiry_time }}</p>
+                                </div>
+                                <div class="col-12">
+                                    <p class="mb-1"><strong>Pickup Address:</strong></p>
+                                    <p>{{ donation.pickup_address }}</p>
+                                </div>
+                                <div class="col-12">
+                                    <p class="mb-1"><strong>Current Status:</strong></p>
+                                    <p>
+                                        {% if donation.status == 'Assigned' %}
+                                            <span class="badge bg-info">Assigned</span>
+                                        {% elif donation.status == 'Collected' %}
+                                            <span class="badge bg-primary">Collected</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="POST" class="needs-validation" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="alert {% if donation.status == 'Assigned' %}alert-primary{% else %}alert-success{% endif %}" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            {% if donation.status == 'Assigned' %}
+                                You are about to mark this task as "Collected". This means you have collected the food from the donor.
+                            {% else %}
+                                You are about to mark this task as "Delivered". This means you have successfully delivered the food to its destination.
+                            {% endif %}
+                        </div>
+
+                        {{ form.status(class="d-none") }}
+
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-lg " ~ ('btn-primary' if donation.status == 'Assigned' else 'btn-success')) }}
+                            <a href="{{ url_for('agent_dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

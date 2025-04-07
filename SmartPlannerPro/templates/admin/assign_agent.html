@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Assign Agent - FoodSaver{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-success bg-opacity-75 text-white">
+                    <h3 class="my-2"><i class="bi bi-person-check me-2"></i>Assign Agent to Donation</h3>
+                </div>
+                <div class="card-body">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Donation #{{ donation.id }} Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1"><strong>Donor:</strong></p>
+                                    <p>{{ donation.donor.username }}</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1"><strong>Food Type:</strong></p>
+                                    <p>{{ donation.food_type }}</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1"><strong>Quantity:</strong></p>
+                                    <p>{{ donation.quantity }}</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1"><strong>Expiry Time:</strong></p>
+                                    <p class="format-datetime">{{ donation.expiry_time }}</p>
+                                </div>
+                                <div class="col-12">
+                                    <p class="mb-1"><strong>Pickup Address:</strong></p>
+                                    <p>{{ donation.pickup_address }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="POST" class="needs-validation" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-4">
+                            <label for="agent" class="form-label">Select Agent to Assign</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                {{ form.agent(class="form-select", id="agent") }}
+                            </div>
+                            {% if form.agent.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.agent.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            
+                            {% if form.agent.choices|length == 0 %}
+                                <div class="alert alert-warning mt-3">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    No agents are available in the system. Please ask agents to register.
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            {% if form.agent.choices|length > 0 %}
+                                {{ form.submit(class="btn btn-success btn-lg") }}
+                            {% else %}
+                                {{ form.submit(class="btn btn-success btn-lg", disabled="disabled") }}
+                            {% endif %}
+                            <a href="{{ url_for('view_requests') }}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

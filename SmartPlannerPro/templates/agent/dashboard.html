@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}Agent Dashboard - FoodSaver{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-grid-fill text-success me-2"></i> Agent Dashboard</h1>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-success bg-opacity-10 text-success border-success mb-3">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-truck fs-1 mb-3"></i>
+                    <h5 class="card-title">Your Assigned Tasks</h5>
+                    <p class="card-text fs-1 fw-bold">{{ donations|length }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle me-2"></i>How It Works</h5>
+                    <ol class="mb-0">
+                        <li class="mb-2">Check your dashboard for assigned food pickups.</li>
+                        <li class="mb-2">Contact the donor and arrange a pickup time.</li>
+                        <li class="mb-2">Once you've collected the food, update the status to "Collected".</li>
+                        <li>After delivering the food to the designated location, update the status to "Delivered".</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task list -->
+    <div class="card mb-4">
+        <div class="card-header bg-success bg-opacity-25">
+            <h4 class="mb-0"><i class="bi bi-list-check me-2"></i> Your Collection Tasks</h4>
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-pills mb-4">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#all-tasks" data-bs-toggle="pill">All Tasks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#assigned-tasks" data-bs-toggle="pill">Assigned</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#collected-tasks" data-bs-toggle="pill">Collected</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#delivered-tasks" data-bs-toggle="pill">Delivered</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="all-tasks">
+                    {% if donations %}
+                        <div class="row g-4">
+                            {% for donation in donations %}
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card card-donation {% if donation.status == 'Assigned' %}card-assigned{% elif donation.status == 'Collected' %}card-collected{% elif donation.status == 'Delivered' %}card-delivered{% endif %}">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <span>Task #{{ donation.id }}</span>
+                                            <span class="badge {% if donation.status == 'Assigned' %}bg-info{% elif donation.status == 'Collected' %}bg-primary{% elif donation.status == 'Delivered' %}bg-success{% endif %}">
+                                                {{ donation.status }}
+                                            </span>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ donation.food_type }}</h5>
+                                            <p class="card-text"><strong>Quantity:</strong> {{ donation.quantity }}</p>
+                                            <p class="card-text"><strong>Donor:</strong> {{ donation.donor.username }}</p>
+                                            <p class="card-text"><strong>Expiry:</strong> <span class="format-datetime">{{ donation.expiry_time }}</span></p>
+                                            <p class="card-text"><strong>Address:</strong> {{ donation.pickup_address }}</p>
+                                            
+                                            {% if donation.status == 'Assigned' %}
+                                                <a href="{{ url_for('update_status', donation_id=donation.id) }}" class="btn btn-primary w-100 mt-3">
+                                                    <i class="bi bi-box"></i> Mark as Collected
+                                                </a>
+                                            {% elif donation.status == 'Collected' %}
+                                                <a href="{{ url_for('update_status', donation_id=donation.id) }}" class="btn btn-success w-100 mt-3">
+                                                    <i class="bi bi-check-circle"></i> Mark as Delivered
+                                                </a>
+                                            {% elif donation.status == 'Delivered' %}
+                                                <button class="btn btn-outline-success w-100 mt-3" disabled>
+                                                    <i class="bi bi-check-circle-fill"></i> Completed
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-footer text-muted small">
+                                            Assigned: <span class="format-datetime">{{ donation.updated_at }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+                            <h5 class="text-muted">No tasks assigned to you yet</h5>
+                            <p>When admins assign you to food collection tasks, they will appear here.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="tab-pane fade" id="assigned-tasks">
+                    {% set assigned_donations = donations|selectattr('status', 'equalto', 'Assigned')|list %}
+                    {% if assigned_donations %}
+                        <div class="row g-4">
+                            {% for donation in assigned_donations %}
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card card-donation card-assigned">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <span>Task #{{ donation.id }}</span>
+                                            <span class="badge bg-info">Assigned</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ donation.food_type }}</h5>
+                                            <p class="card-text"><strong>Quantity:</strong> {{ donation.quantity }}</p>
+                                            <p class="card-text"><strong>Donor:</strong> {{ donation.donor.username }}</p>
+                                            <p class="card-text"><strong>Expiry:</strong> <span class="format-datetime">{{ donation.expiry_time }}</span></p>
+                                            <p class="card-text"><strong>Address:</strong> {{ donation.pickup_address }}</p>
+                                            
+                                            <a href="{{ url_for('update_status', donation_id=donation.id) }}" class="btn btn-primary w-100 mt-3">
+                                                <i class="bi bi-box"></i> Mark as Collected
+                                            </a>
+                                        </div>
+                                        <div class="card-footer text-muted small">
+                                            Assigned: <span class="format-datetime">{{ donation.updated_at }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+                            <h5 class="text-muted">No assigned tasks</h5>
+                            <p>You don't have any tasks in the "Assigned" status.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="tab-pane fade" id="collected-tasks">
+                    {% set collected_donations = donations|selectattr('status', 'equalto', 'Collected')|list %}
+                    {% if collected_donations %}
+                        <div class="row g-4">
+                            {% for donation in collected_donations %}
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card card-donation card-collected">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <span>Task #{{ donation.id }}</span>
+                                            <span class="badge bg-primary">Collected</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ donation.food_type }}</h5>
+                                            <p class="card-text"><strong>Quantity:</strong> {{ donation.quantity }}</p>
+                                            <p class="card-text"><strong>Donor:</strong> {{ donation.donor.username }}</p>
+                                            <p class="card-text"><strong>Expiry:</strong> <span class="format-datetime">{{ donation.expiry_time }}</span></p>
+                                            <p class="card-text"><strong>Address:</strong> {{ donation.pickup_address }}</p>
+                                            
+                                            <a href="{{ url_for('update_status', donation_id=donation.id) }}" class="btn btn-success w-100 mt-3">
+                                                <i class="bi bi-check-circle"></i> Mark as Delivered
+                                            </a>
+                                        </div>
+                                        <div class="card-footer text-muted small">
+                                            Collected: <span class="format-datetime">{{ donation.updated_at }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+                            <h5 class="text-muted">No collected tasks</h5>
+                            <p>You don't have any tasks in the "Collected" status.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="tab-pane fade" id="delivered-tasks">
+                    {% set delivered_donations = donations|selectattr('status', 'equalto', 'Delivered')|list %}
+                    {% if delivered_donations %}
+                        <div class="row g-4">
+                            {% for donation in delivered_donations %}
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card card-donation card-delivered">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <span>Task #{{ donation.id }}</span>
+                                            <span class="badge bg-success">Delivered</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ donation.food_type }}</h5>
+                                            <p class="card-text"><strong>Quantity:</strong> {{ donation.quantity }}</p>
+                                            <p class="card-text"><strong>Donor:</strong> {{ donation.donor.username }}</p>
+                                            <p class="card-text"><strong>Expiry:</strong> <span class="format-datetime">{{ donation.expiry_time }}</span></p>
+                                            <p class="card-text"><strong>Address:</strong> {{ donation.pickup_address }}</p>
+                                            
+                                            <button class="btn btn-outline-success w-100 mt-3" disabled>
+                                                <i class="bi bi-check-circle-fill"></i> Completed
+                                            </button>
+                                        </div>
+                                        <div class="card-footer text-muted small">
+                                            Delivered: <span class="format-datetime">{{ donation.updated_at }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+                            <h5 class="text-muted">No delivered tasks</h5>
+                            <p>You don't have any tasks in the "Delivered" status.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

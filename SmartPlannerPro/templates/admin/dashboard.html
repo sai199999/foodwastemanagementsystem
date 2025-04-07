@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - FoodSaver{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-grid-fill text-success me-2"></i> Admin Dashboard</h1>
+        <a href="{{ url_for('view_requests') }}" class="btn btn-success">
+            <i class="bi bi-list-check"></i> Manage All Donations
+        </a>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
+            <div class="stats-card bg-warning bg-opacity-25 text-warning border border-warning">
+                <i class="bi bi-hourglass-split fs-1 mb-3"></i>
+                <div class="stats-value">{{ stats.pending }}</div>
+                <div class="stats-label">Pending</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
+            <div class="stats-card bg-info bg-opacity-25 text-info border border-info">
+                <i class="bi bi-person-check fs-1 mb-3"></i>
+                <div class="stats-value">{{ stats.assigned }}</div>
+                <div class="stats-label">Assigned</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
+            <div class="stats-card bg-primary bg-opacity-25 text-primary border border-primary">
+                <i class="bi bi-box fs-1 mb-3"></i>
+                <div class="stats-value">{{ stats.collected }}</div>
+                <div class="stats-label">Collected</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card bg-success bg-opacity-25 text-success border border-success">
+                <i class="bi bi-check-circle fs-1 mb-3"></i>
+                <div class="stats-value">{{ stats.delivered }}</div>
+                <div class="stats-label">Delivered</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Donations -->
+    <div class="card mb-4">
+        <div class="card-header bg-success bg-opacity-25">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="bi bi-clock-history me-2"></i> Recent Donations</h4>
+                <a href="{{ url_for('view_requests') }}" class="btn btn-sm btn-outline-success">View All</a>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if recent_donations %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Donor</th>
+                                <th>Food Type</th>
+                                <th>Status</th>
+                                <th>Expiry</th>
+                                <th>Submitted</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for donation in recent_donations %}
+                                <tr>
+                                    <td>{{ donation.id }}</td>
+                                    <td>{{ donation.donor.username }}</td>
+                                    <td>{{ donation.food_type }}</td>
+                                    <td>
+                                        {% if donation.status == 'Pending' %}
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        {% elif donation.status == 'Assigned' %}
+                                            <span class="badge bg-info">Assigned</span>
+                                        {% elif donation.status == 'Collected' %}
+                                            <span class="badge bg-primary">Collected</span>
+                                        {% elif donation.status == 'Delivered' %}
+                                            <span class="badge bg-success">Delivered</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="format-datetime">{{ donation.expiry_time }}</td>
+                                    <td class="format-datetime">{{ donation.created_at }}</td>
+                                    <td>
+                                        {% if donation.status == 'Pending' %}
+                                            <a href="{{ url_for('assign_agent', donation_id=donation.id) }}" class="btn btn-sm btn-success">
+                                                <i class="bi bi-person-check"></i> Assign
+                                            </a>
+                                        {% else %}
+                                            <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#donationModal{{ donation.id }}">
+                                                <i class="bi bi-eye"></i> View
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                                <!-- Modal for donation details -->
+                                <div class="modal fade" id="donationModal{{ donation.id }}" tabindex="-1" aria-labelledby="donationModalLabel{{ donation.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="donationModalLabel{{ donation.id }}">Donation #{{ donation.id }} Details</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="card mb-3">
+                                                    <div class="card-body">
+                                                        <h6 class="card-subtitle mb-3 text-muted">Donor Information</h6>
+                                                        <p><strong>Name:</strong> {{ donation.donor.username }}</p>
+                                                        <p><strong>Email:</strong> {{ donation.donor.email }}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card mb-3">
+                                                    <div class="card-body">
+                                                        <h6 class="card-subtitle mb-3 text-muted">Donation Information</h6>
+                                                        <p><strong>Food Type:</strong> {{ donation.food_type }}</p>
+                                                        <p><strong>Quantity:</strong> {{ donation.quantity }}</p>
+                                                        <p><strong>Expiry Time:</strong> <span class="format-datetime">{{ donation.expiry_time }}</span></p>
+                                                        <p><strong>Pickup Address:</strong> {{ donation.pickup_address }}</p>
+                                                        <p><strong>Status:</strong> 
+                                                            {% if donation.status == 'Pending' %}
+                                                                <span class="badge bg-warning text-dark">Pending</span>
+                                                            {% elif donation.status == 'Assigned' %}
+                                                                <span class="badge bg-info">Assigned</span>
+                                                            {% elif donation.status == 'Collected' %}
+                                                                <span class="badge bg-primary">Collected</span>
+                                                            {% elif donation.status == 'Delivered' %}
+                                                                <span class="badge bg-success">Delivered</span>
+                                                            {% endif %}
+                                                        </p>
+                                                        <p><strong>Submitted On:</strong> <span class="format-datetime">{{ donation.created_at }}</span></p>
+                                                    </div>
+                                                </div>
+
+                                                {% if donation.agent %}
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h6 class="card-subtitle mb-3 text-muted">Agent Information</h6>
+                                                        <p><strong>Name:</strong> {{ donation.agent.username }}</p>
+                                                        <p><strong>Email:</strong> {{ donation.agent.email }}</p>
+                                                        <p><strong>Assigned On:</strong> <span class="format-datetime">{{ donation.updated_at }}</span></p>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+                    <h5 class="text-muted">No donations have been made yet</h5>
+                    <p>When donors submit food donation requests, they will appear here.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Actions Card -->
+    <div class="card">
+        <div class="card-header bg-success bg-opacity-25">
+            <h4 class="mb-0"><i class="bi bi-lightning-charge me-2"></i> Quick Actions</h4>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <a href="{{ url_for('view_requests') }}" class="card text-center p-4 hover-effect text-decoration-none">
+                        <i class="bi bi-list-ul fs-1 mb-3 text-success"></i>
+                        <h5>View All Donations</h5>
+                        <p class="text-muted mb-0">See all donation requests</p>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('view_requests') }}?status=Pending" class="card text-center p-4 hover-effect text-decoration-none">
+                        <i class="bi bi-hourglass-split fs-1 mb-3 text-warning"></i>
+                        <h5>Pending Requests</h5>
+                        <p class="text-muted mb-0">Assign agents to pending donations</p>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('view_requests') }}?status=Delivered" class="card text-center p-4 hover-effect text-decoration-none">
+                        <i class="bi bi-check-circle fs-1 mb-3 text-success"></i>
+                        <h5>Completed Donations</h5>
+                        <p class="text-muted mb-0">View successfully delivered donations</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

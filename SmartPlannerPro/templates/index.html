@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}FoodSaver - Food Waste Management{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 mb-4">Reducing Food Waste, Feeding Communities</h1>
+        <p class="lead mb-5">Join our platform to donate excess food, manage collections, and make a difference in fighting hunger and waste.</p>
+        <div class="d-flex justify-content-center gap-3">
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('register') }}" class="btn btn-success btn-lg">Get Started</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">Login</a>
+            {% else %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-success btn-lg">Go to Dashboard</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- How It Works Section -->
+    <section class="my-5">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card hover-effect h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-gift text-success" style="font-size: 3rem;"></i>
+                        </div>
+                        <h4 class="card-title">Donors</h4>
+                        <p class="card-text">Restaurants, grocery stores, and individuals can donate excess food through our platform.</p>
+                        <div class="mt-3">
+                            <a href="{{ url_for('register') }}" class="btn btn-outline-success">Become a Donor</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card hover-effect h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-workspace text-info" style="font-size: 3rem;"></i>
+                        </div>
+                        <h4 class="card-title">Admins</h4>
+                        <p class="card-text">Our admins oversee the donation process and assign agents to collect food efficiently.</p>
+                        <div class="mt-3">
+                            <a href="{{ url_for('register') }}" class="btn btn-outline-info">Join as Admin</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card hover-effect h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-truck text-warning" style="font-size: 3rem;"></i>
+                        </div>
+                        <h4 class="card-title">Agents</h4>
+                        <p class="card-text">Volunteer agents collect and deliver food to those who need it most in our communities.</p>
+                        <div class="mt-3">
+                            <a href="{{ url_for('register') }}" class="btn btn-outline-warning">Become an Agent</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="my-5">
+        <h2 class="text-center mb-5">Benefits of Using FoodSaver</h2>
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 2rem;"></i>
+                    </div>
+                    <div>
+                        <h4>Reduce Food Waste</h4>
+                        <p>Help prevent perfectly good food from ending up in landfills, reducing greenhouse gas emissions.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="bi bi-people-fill text-success" style="font-size: 2rem;"></i>
+                    </div>
+                    <div>
+                        <h4>Feed Those in Need</h4>
+                        <p>Direct excess food to shelters, food banks, and community organizations that serve vulnerable populations.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="bi bi-bar-chart-fill text-success" style="font-size: 2rem;"></i>
+                    </div>
+                    <div>
+                        <h4>Track Your Impact</h4>
+                        <p>Monitor your contributions and see the real-world difference your donations are making.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="bi bi-clock-fill text-success" style="font-size: 2rem;"></i>
+                    </div>
+                    <div>
+                        <h4>Real-Time Updates</h4>
+                        <p>Receive notifications when your food is picked up and delivered, ensuring transparency throughout the process.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="my-5 text-center py-5 bg-success bg-opacity-10 rounded">
+        <h2 class="mb-4">Ready to Make a Difference?</h2>
+        <p class="lead mb-4">Join our growing community of donors, admins, and agents working together to reduce food waste.</p>
+        <div class="d-flex justify-content-center gap-3">
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('register') }}" class="btn btn-success btn-lg">Sign Up Now</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-success btn-lg">Log In</a>
+            {% else %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-success btn-lg">Go to Dashboard</a>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}

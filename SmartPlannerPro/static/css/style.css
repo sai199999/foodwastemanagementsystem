@@ -1,0 +1,198 @@
+/* Custom styles for Food Waste Management System */
+
+/* Root variables for theme */
+:root {
+    --primary-green: #4CAF50;
+    --secondary-green: #8BC34A; 
+    --accent-color: #FF9800;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+}
+
+/* General styles */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Custom button styling */
+.btn-green {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    color: white;
+}
+
+.btn-green:hover {
+    background-color: var(--secondary-green);
+    border-color: var(--secondary-green);
+    color: white;
+}
+
+/* Custom card styling */
+.card-donation {
+    border-left: 4px solid var(--primary-green);
+    transition: transform 0.2s ease;
+}
+
+.card-donation:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-pending {
+    border-left-color: var(--warning-color);
+}
+
+.card-assigned {
+    border-left-color: var(--info-color);
+}
+
+.card-collected {
+    border-left-color: var(--accent-color);
+}
+
+.card-delivered {
+    border-left-color: var(--success-color);
+}
+
+/* Status badges */
+.badge-pending {
+    background-color: var(--warning-color);
+    color: #212529;
+}
+
+.badge-assigned {
+    background-color: var(--info-color);
+    color: white;
+}
+
+.badge-collected {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.badge-delivered {
+    background-color: var(--success-color);
+    color: white;
+}
+
+/* Notification styling */
+.notification-badge {
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    font-size: 0.6rem;
+}
+
+.notification-dropdown {
+    min-width: 300px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    border-left: 3px solid var(--primary-green);
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+/* Hover effects for interactive elements */
+.hover-effect {
+    transition: all 0.3s ease;
+}
+
+.hover-effect:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero section on homepage */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1488330890490-c291ecf62571?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 120px 0;
+    margin-bottom: 40px;
+}
+
+/* Stats card in dashboard */
+.stats-card {
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: scale(1.05);
+}
+
+.stats-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.stats-label {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+}
+
+/* Form styling */
+.form-control:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+/* Footer styling */
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+    margin-top: auto;
+}
+
+/* Loading spinner */
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Mobile responsiveness adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 80px 0;
+    }
+    
+    .stats-value {
+        font-size: 2rem;
+    }
+    
+    .notification-dropdown {
+        width: 100%;
+        max-width: 300px;
+    }
+}
